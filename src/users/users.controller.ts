@@ -20,13 +20,13 @@ export class UsersController {
   ) {}
 
   @Post()
-  create(@Body() dto: CreateUserDto) {
-    return this.usersService.create(dto);
+  async create(@Body() dto: CreateUserDto) {
+    return await this.usersService.create(dto);
   }
 
   @Get(':id')
-  getOne(@Param('id') id: number) {
-    return this.usersService.getOne(id);
+  async getOne(@Param('id') id: number) {
+    return await this.usersService.getOne(id);
   }
 
   @Patch(':id')
