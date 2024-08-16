@@ -1,7 +1,7 @@
 import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
-import { SignupDto } from './dto/signup-dto';
 import { AuthService } from './auth.service';
 import { SigninDto } from './dto/signin-dto';
+import { SignupDto } from './dto/signup-dto';
 
 @Controller('auth')
 export class AuthController {
@@ -20,6 +20,6 @@ export class AuthController {
       throw new UnauthorizedException('Неверный логин или пароль');
     }
 
-    return this.authService.signin(user);
+    return await this.authService.signin(user);
   }
 }

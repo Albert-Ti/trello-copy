@@ -6,11 +6,13 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-dto';
 import { UpdateUserDto } from './dto/update-dto';
 import { ColumnService } from 'src/column/column.service';
+import { AuthGuard } from 'src/guards/jwt-auth.cuard';
 
 @Controller('users')
 export class UsersController {
@@ -24,6 +26,7 @@ export class UsersController {
     return await this.usersService.create(dto);
   }
 
+  @UseGuards(AuthGuard)
   @Get(':id')
   async getOne(@Param('id') id: number) {
     return await this.usersService.getOne({ where: { id } });

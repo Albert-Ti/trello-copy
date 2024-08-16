@@ -4,6 +4,7 @@ import { UsersService } from './users.service';
 import { ColumnService } from 'src/column/column.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entity/users.entity';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
