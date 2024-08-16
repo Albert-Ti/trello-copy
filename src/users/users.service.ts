@@ -1,12 +1,20 @@
 import { Injectable } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-dto';
+import { UpdateUserDto } from './dto/update-dto';
 
 @Injectable()
 export class UsersService {
   constructor() {}
 
-  create(dto) {
+  create(dto: CreateUserDto) {
     return { dto };
   }
 
-  getAll() {}
+  getOne(id: number) {
+    return { id };
+  }
+
+  update(dto: UpdateUserDto) {
+    return { dto };
+  }
 }
