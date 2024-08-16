@@ -5,8 +5,18 @@ import {
   IsString,
   IsUrl,
 } from 'class-validator';
+import {
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-export class CreateUserDto {
+@Entity({ name: 'users' })
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @IsString({ message: 'username должен быть строкой' })
   username: string;
 
@@ -19,4 +29,10 @@ export class CreateUserDto {
   @IsOptional()
   @IsUrl({}, { message: 'avatar должен быть ссылкой' })
   avatar: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
