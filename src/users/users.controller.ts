@@ -26,7 +26,7 @@ export class UsersController {
 
   @Get(':id')
   async getOne(@Param('id') id: number) {
-    return await this.usersService.getOne(id);
+    return await this.usersService.getOne({ where: { id } });
   }
 
   @Patch(':id')

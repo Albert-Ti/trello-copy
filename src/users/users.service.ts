@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-dto';
 import { UpdateUserDto } from './dto/update-dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/users.entity';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
@@ -21,12 +21,8 @@ export class UsersService {
     return result;
   }
 
-  async getOne(id: number) {
-    const { password, ...result } = await this.usersRepository.findOne({
-      where: { id },
-    });
-
-    return result;
+  async getOne(query: FindOneOptions) {
+    return await this.usersRepository.findOne(query);
   }
 
   update(dto: UpdateUserDto) {
