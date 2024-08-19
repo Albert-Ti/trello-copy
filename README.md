@@ -9,6 +9,8 @@
 
 ### Ссылка на реализованную структуру
 
+![](schemas.svg)
+
 [dbdiagram](https://dbdiagram.io/d/backend-test-task-similar-to-trello-Diagram-66bf763f8b4bb5230e511f1a)
 
 ### Запуск:
@@ -16,3 +18,5 @@
 - запуск проекта в dev-режиме "yarn run start:dev" и в prod-режиме "yarn run start:prod"
 
 - чтобы воспользоваться документацией Swagger перейдите по маршруту http://localhost:3000/api/docs
+
+![](swagger.png)
