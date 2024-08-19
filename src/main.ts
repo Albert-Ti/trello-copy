@@ -12,11 +12,12 @@ async function bootstrap() {
     .setTitle('Trello Copy')
     .setDescription('Описание API, подобного как у Trello')
     .setVersion('1.0')
+    .addTag('Albert Taygibov')
     .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api/docs', app, document);
 
   await app.listen(3000);
 }
