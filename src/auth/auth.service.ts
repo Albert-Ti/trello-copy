@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { User } from 'src/users/entity/users.entity';
 import { UsersService } from 'src/users/users.service';
+import { SigninDto } from './dto/signin-dto';
 import { SignupDto } from './dto/signup-dto';
 
 @Injectable()
@@ -20,17 +20,21 @@ export class AuthService {
     }
   }
 
-  async signin(user: Omit<User, 'password'>) {
+  async signin(dto: SigninDto) {
+    const user = await this.validateUser({
+      email: dto.email,
+      password: dto.password,
+    });
+    if (!user) {
+      throw new UnauthorizedException('Неверный логин или пароль');
+    }
     return {
-      token: this.jwtService.sign(
-        { sub: user.id },
-        { secret: process.env.JWT_SECRET },
-      ),
+      token: this.jwtService.sign(user, { secret: process.env.JWT_SECRET }),
     };
   }
 
   async validateUser({ email, password }) {
-    const user = await this.usersService.getOne({ where: { email } });
+    const user = await this.usersService.findOne({ where: { email } });
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const { password, ...result } = user;

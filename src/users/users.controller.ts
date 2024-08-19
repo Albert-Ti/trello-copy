@@ -1,45 +1,51 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Param,
   Patch,
-  Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-dto';
+import { ColumnsService } from 'src/columns/columns.service';
+import { AuthGuard } from 'src/guards/jwt-auth.guard';
+import { RequestWithUser } from 'src/types';
 import { UpdateUserDto } from './dto/update-dto';
-import { ColumnService } from 'src/column/column.service';
-import { AuthGuard } from 'src/guards/jwt-auth.cuard';
+import { UsersService } from './users.service';
 
+@UseGuards(AuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly columnService: ColumnService,
+    private readonly columnsService: ColumnsService,
   ) {}
 
-  @Post()
-  async create(@Body() dto: CreateUserDto) {
-    return await this.usersService.create(dto);
-  }
-
-  @UseGuards(AuthGuard)
   @Get(':id')
-  async getOne(@Param('id') id: number) {
-    return await this.usersService.getOne({ where: { id } });
+  async getUserById(@Param('id') id: number) {
+    return await this.usersService.findOne({ where: { id } });
   }
 
-  @Patch(':id')
-  update(@Param('id') id, @Body() dto: UpdateUserDto) {
-    return this.usersService.update(dto);
+  @Get('me')
+  async getMe(@Req() req: RequestWithUser) {
+    return await req.user;
   }
 
-  @Get(':id/columns')
-  getUserColumn(@Param('id') id: number) {}
+  @Patch('me')
+  update(@Req() req: RequestWithUser, @Body() dto: UpdateUserDto) {
+    return this.usersService.update(req.user.id, dto);
+  }
 
-  @Delete(':id/columns/:id')
-  removeColumn(@Param() params: { userId: number; columnId: number }) {}
+  @Get('me/columns')
+  async getUserColumnList(@Req() req: RequestWithUser) {
+    return await this.columnsService.findMany({
+      where: { owner: { id: req.user.id } },
+      relations: ['owner'],
+    });
+  }
+
+  @Get('me/columns/:id')
+  async getUserColumn(@Param('id') id: number) {
+    return await this.columnsService.getOne({ where: { id } });
+  }
 }

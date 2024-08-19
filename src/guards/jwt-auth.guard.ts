@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -21,10 +20,10 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const decoded = await this.jwtService.verify(token, {
+      const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
       });
-      request.user = decoded;
+      request.user = payload;
       return true;
     } catch (error) {
       throw new UnauthorizedException('Необходима авторизация');

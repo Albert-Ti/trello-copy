@@ -1,9 +1,14 @@
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsOptional, IsString } from 'class-validator';
 
 export class UpdateUserDto {
+  @IsOptional()
   @IsString({ message: 'username должен быть строкой' })
-  username?: string;
+  username: string;
 
+  @IsOptional()
   @IsEmail({}, { message: 'Некорректно введен email' })
-  email?: string;
+  email: string;
+
+  @IsOptional()
+  password: string;
 }

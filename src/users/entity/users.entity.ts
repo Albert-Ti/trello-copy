@@ -5,10 +5,12 @@ import {
   IsString,
   IsUrl,
 } from 'class-validator';
+import { Colum } from 'src/columns/entity/columns.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -40,4 +42,7 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Colum, (colum) => colum.owner)
+  colum: Colum[];
 }

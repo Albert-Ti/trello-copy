@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcryptjs';
+import { FindOneOptions, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-dto';
 import { UpdateUserDto } from './dto/update-dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/users.entity';
-import { FindOneOptions, Repository } from 'typeorm';
-import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
@@ -21,11 +21,18 @@ export class UsersService {
     return result;
   }
 
-  async getOne(query: FindOneOptions) {
+  async findOne(query: FindOneOptions) {
     return await this.usersRepository.findOne(query);
   }
 
-  update(dto: UpdateUserDto) {
-    return { dto };
+  async update(userId: number, dto: UpdateUserDto) {
+    if (dto.password) {
+      return await this.usersRepository.update(userId, {
+        ...dto,
+        password: await bcrypt.hash(dto.password, 10),
+      });
+    }
+
+    return await this.usersRepository.update(userId, dto);
   }
 }
