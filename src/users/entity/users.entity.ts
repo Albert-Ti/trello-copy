@@ -5,7 +5,8 @@ import {
   IsString,
   IsUrl,
 } from 'class-validator';
-import { Colum } from 'src/columns/entity/columns.entity';
+import { ColumnEntity } from 'src/columns/entity/columns.entity';
+import { CommentEntity } from 'src/comments/entity/comments.entity';
 import {
   Column,
   CreateDateColumn,
@@ -16,7 +17,7 @@ import {
 } from 'typeorm';
 
 @Entity({ name: 'users' })
-export class User {
+export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -43,6 +44,9 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => Colum, (colum) => colum.owner)
-  colum: Colum[];
+  @OneToMany(() => ColumnEntity, (columEntity) => columEntity.owner)
+  columns: ColumnEntity[];
+
+  @OneToMany(() => CommentEntity, (commentEntity) => commentEntity.owner)
+  comments: CommentEntity[];
 }

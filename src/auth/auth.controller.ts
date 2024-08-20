@@ -1,8 +1,8 @@
 import { Body, Controller, Post } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { SigninDto } from './dto/signin-dto';
 import { SignupDto } from './dto/signup-dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Методы авторизации')
 @Controller('auth')
@@ -19,5 +19,11 @@ export class AuthController {
   @Post('signin')
   async signin(@Body() dto: SigninDto) {
     return await this.authService.signin(dto);
+  }
+
+  @ApiOperation({ summary: 'Запрос на сброс пароля' })
+  @Post('forgot-password')
+  async forgotPassword(@Body('email') email: string) {
+    return email;
   }
 }

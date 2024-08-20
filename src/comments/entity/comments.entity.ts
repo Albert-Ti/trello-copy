@@ -6,19 +6,18 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'columns' })
-export class ColumnEntity {
+@Entity({ name: 'cards' })
+export class CommentEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @IsString({ message: 'title должен быть строкой' })
+  @IsString({ message: 'text должен быть строкой' })
   @Column()
-  title: string;
+  text: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -26,9 +25,9 @@ export class ColumnEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => UserEntity, (userEntity) => userEntity.columns)
-  owner: UserEntity;
+  @ManyToOne(() => CardEntity, (cardEntity) => cardEntity.comments)
+  card: CardEntity;
 
-  @OneToMany(() => CardEntity, (cardEntity) => cardEntity.colum)
-  cards: CardEntity[];
+  @ManyToOne(() => UserEntity, (userEntity) => userEntity.comments)
+  owner: UserEntity;
 }
