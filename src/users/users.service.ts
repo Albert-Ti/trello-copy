@@ -4,12 +4,13 @@ import * as bcrypt from 'bcryptjs';
 import { FindOneOptions, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-dto';
 import { UpdateUserDto } from './dto/update-dto';
-import { User } from './entity/users.entity';
+import { UserEntity } from './entity/users.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User) private readonly usersRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private readonly usersRepository: Repository<UserEntity>,
   ) {}
 
   async create(dto: CreateUserDto) {

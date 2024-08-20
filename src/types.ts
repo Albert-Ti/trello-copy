@@ -1,4 +1,4 @@
 import { Request } from 'express';
-import { User } from './users/entity/users.entity';
+import { UserEntity } from './users/entity/users.entity';
 
-export type RequestWithUser = Request & { user: Omit<User, 'password'> };
+export type RequestWithUser = Request & { user: Omit<UserEntity, 'password'> };

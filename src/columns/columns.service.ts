@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { User } from 'src/users/entity/users.entity';
+import { UserEntity } from 'src/users/entity/users.entity';
 import { CreateColumDto } from './dto/create-dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Colum } from './entity/columns.entity';
+import { ColumnEntity } from './entity/columns.entity';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 
 @Injectable()
 export class ColumnsService {
   constructor(
-    @InjectRepository(Colum)
-    private readonly columnsRepository: Repository<Colum>,
+    @InjectRepository(ColumnEntity)
+    private readonly columnsRepository: Repository<ColumnEntity>,
   ) {}
 
-  async create(authUser: Omit<User, 'password'>, dto: CreateColumDto) {
+  async create(authUser: Omit<UserEntity, 'password'>, dto: CreateColumDto) {
     return await this.columnsRepository.save({ ...dto, owner: authUser });
   }
 
