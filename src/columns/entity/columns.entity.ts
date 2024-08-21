@@ -26,9 +26,9 @@ export class ColumnEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => UserEntity, (userEntity) => userEntity.columns)
+  @ManyToOne(() => UserEntity, (user) => user.columns)
   owner: UserEntity;
 
-  @OneToMany(() => CardEntity, (cardEntity) => cardEntity.colum)
+  @OneToMany(() => CardEntity, (card) => card.column)
   cards: CardEntity[];
 }

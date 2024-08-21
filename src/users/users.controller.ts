@@ -14,7 +14,7 @@ import { UpdateUserDto } from './dto/update-dto';
 import { UsersService } from './users.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('Методы пользователя')
+@ApiTags('Пользователи')
 @UseGuards(AuthGuard)
 @Controller('users')
 export class UsersController {
@@ -23,16 +23,16 @@ export class UsersController {
     private readonly columnsService: ColumnsService,
   ) {}
 
-  @ApiOperation({ summary: 'Найти пользователя по идентификатору' })
-  @Get(':id')
-  async getUserById(@Param('id') id: number) {
-    return await this.usersService.findOne({ where: { id } });
-  }
-
   @ApiOperation({ summary: 'Получить авторизованного пользователя' })
   @Get('me')
   async getMe(@Req() req: RequestWithUser) {
     return await req.user;
+  }
+
+  @ApiOperation({ summary: 'Найти пользователя по идентификатору' })
+  @Get(':id')
+  async getUserById(@Param('id') id: number) {
+    return await this.usersService.findOne({ where: { id } });
   }
 
   @ApiOperation({ summary: 'Изменить авторизованного пользователя' })
@@ -48,7 +48,7 @@ export class UsersController {
   async getUserColumnList(@Req() req: RequestWithUser) {
     return await this.columnsService.findMany({
       where: { owner: { id: req.user.id } },
-      relations: ['owner'],
+      relations: ['owner', 'cards', 'cards.comments'],
     });
   }
 
@@ -57,6 +57,9 @@ export class UsersController {
   })
   @Get('me/columns/:id')
   async getUserColumn(@Param('id') id: number) {
-    return await this.columnsService.getOne({ where: { id } });
+    return await this.columnsService.getOne({
+      where: { id },
+      relations: ['owner', 'cards', 'cards.comments', 'cards.comments'],
+    });
   }
 }

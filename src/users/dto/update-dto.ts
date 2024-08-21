@@ -18,5 +18,6 @@ export class UpdateUserDto {
 
   @ApiProperty({ example: '12345', description: 'Пароль' })
   @IsOptional()
+  @IsString({ message: 'password должен быть строкой' })
   password: string;
 }

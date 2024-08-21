@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { UserEntity } from 'src/users/entity/users.entity';
-import { CreateColumDto } from './dto/create-dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ColumnEntity } from './entity/columns.entity';
+import { UserEntity } from 'src/users/entity/users.entity';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
+import { CreateColumnsDto } from './dto/create-dto';
+import { UpdateColumnsDto } from './dto/update-dto';
+import { ColumnEntity } from './entity/columns.entity';
 
 @Injectable()
 export class ColumnsService {
@@ -12,8 +13,11 @@ export class ColumnsService {
     private readonly columnsRepository: Repository<ColumnEntity>,
   ) {}
 
-  async create(authUser: Omit<UserEntity, 'password'>, dto: CreateColumDto) {
-    return await this.columnsRepository.save({ ...dto, owner: authUser });
+  async create(
+    authorizedUser: Omit<UserEntity, 'password'>,
+    dto: CreateColumnsDto,
+  ) {
+    return await this.columnsRepository.save({ ...dto, owner: authorizedUser });
   }
 
   async getOne(query: FindOneOptions) {
@@ -22,6 +26,10 @@ export class ColumnsService {
 
   async findMany(query: FindManyOptions) {
     return await this.columnsRepository.find(query);
+  }
+
+  async update(columnId: number, dto: UpdateColumnsDto) {
+    return await this.columnsRepository.update(columnId, dto);
   }
 
   async remove(id: number) {

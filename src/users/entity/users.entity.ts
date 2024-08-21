@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   IsEmail,
   IsNotEmpty,
@@ -29,6 +30,7 @@ export class UserEntity {
   @Column({ unique: true })
   email: string;
 
+  @Exclude()
   @IsNotEmpty({ message: 'password не должен быть пустым' })
   @Column()
   password: string;
@@ -44,9 +46,9 @@ export class UserEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => ColumnEntity, (columEntity) => columEntity.owner)
+  @OneToMany(() => ColumnEntity, (colum) => colum.owner)
   columns: ColumnEntity[];
 
-  @OneToMany(() => CommentEntity, (commentEntity) => commentEntity.owner)
+  @OneToMany(() => CommentEntity, (comment) => comment.owner)
   comments: CommentEntity[];
 }

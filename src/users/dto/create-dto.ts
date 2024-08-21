@@ -18,6 +18,7 @@ export class CreateUserDto {
 
   @ApiProperty({ example: '12345', description: 'Пароль' })
   @IsNotEmpty({ message: 'password не должен быть пустым' })
+  @IsString({ message: 'password должен быть строкой' })
   password: string;
 
   @ApiProperty({ example: 'https://i.pravatar.cc/300', description: 'Аватар' })
