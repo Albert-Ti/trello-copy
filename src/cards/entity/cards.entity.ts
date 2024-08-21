@@ -30,9 +30,9 @@ export class CardEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => ColumnEntity, (columEntity) => columEntity.cards)
-  colum: ColumnEntity;
+  @ManyToOne(() => ColumnEntity, (colum) => colum.cards)
+  column: ColumnEntity;
 
-  @OneToMany(() => CommentEntity, (commentEntity) => commentEntity.card)
+  @OneToMany(() => CommentEntity, (comment) => comment.card)
   comments: CommentEntity[];
 }

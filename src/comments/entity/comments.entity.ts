@@ -6,11 +6,12 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'cards' })
+@Entity({ name: 'comments' })
 export class CommentEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -25,9 +26,17 @@ export class CommentEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => CardEntity, (cardEntity) => cardEntity.comments)
+  @ManyToOne(() => CardEntity, (card) => card.comments)
   card: CardEntity;
 
-  @ManyToOne(() => UserEntity, (userEntity) => userEntity.comments)
+  @ManyToOne(() => UserEntity, (user) => user.comments)
   owner: UserEntity;
+
+  @ManyToOne(() => CommentEntity, (comment) => comment.replies, {
+    nullable: true,
+  })
+  parent: CommentEntity;
+
+  @OneToMany(() => CommentEntity, (comment) => comment.parent)
+  replies: CommentEntity[];
 }
