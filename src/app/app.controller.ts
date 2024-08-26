@@ -10,6 +10,6 @@ export class AppController {
   @ApiOperation({ summary: 'Получить главную страницу' })
   @Get()
   getHello(): string {
-    return this.appService.getHello();
+    return this.appService.getHome();
   }
 }

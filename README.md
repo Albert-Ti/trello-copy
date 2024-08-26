@@ -11,7 +11,7 @@
 
 [dbdiagram](https://dbdiagram.io/d/backend-test-task-similar-to-trello-Diagram-66bf763f8b4bb5230e511f1a)
 
-### Запуск:
+### Для запуска проекта используется Yarn:
 
 ```bash
 yarn run start:dev # в dev-режиме

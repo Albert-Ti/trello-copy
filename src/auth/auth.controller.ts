@@ -20,10 +20,4 @@ export class AuthController {
   async signin(@Body() dto: SigninDto) {
     return await this.authService.signin(dto);
   }
-
-  @ApiOperation({ summary: 'Запрос на сброс пароля' })
-  @Post('forgot-password')
-  async forgotPassword(@Body('email') email: string) {
-    return email;
-  }
 }
