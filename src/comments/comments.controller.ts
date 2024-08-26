@@ -8,13 +8,14 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/jwt-auth.guard';
 import { CreateCommentsDto } from './dto/create-dto';
 import { UpdateCommentsDto } from './dto/update-dto';
 import { CommentsService } from './comments.service';
 import { RequestWithUser } from 'src/types';
 
+@ApiBearerAuth('access-token')
 @ApiTags('Комментарии')
 @UseGuards(AuthGuard)
 @Controller('cards/:cardId/comments')
@@ -33,9 +34,17 @@ export class CommentsController {
 
   @ApiOperation({ summary: 'Изменение комментария по идентификатору' })
   @Patch(':id')
-  async update(@Param('id') id: number, dto: UpdateCommentsDto) {}
+  async update(
+    @Req() req: RequestWithUser,
+    @Param('id') id: number,
+    @Body() dto: UpdateCommentsDto,
+  ) {
+    return await this.commentsService.update(req.user, id, dto);
+  }
 
   @ApiOperation({ summary: 'Удаление комментария по идентификатору' })
   @Delete(':id')
-  async remove(@Param('id') id: number) {}
+  async remove(@Req() req: RequestWithUser, @Param('id') id: number) {
+    return await this.commentsService.remove(req.user, id);
+  }
 }

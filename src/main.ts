@@ -12,8 +12,17 @@ async function bootstrap() {
     .setTitle('Trello Copy')
     .setDescription('Описание API, подобного как у Trello')
     .setVersion('1.0')
-    .addTag('Albert Taygibov')
-    .addBearerAuth()
+    .addBearerAuth(
+      {
+        description: 'Введите токен в следующем формате: Bearer <JWT>',
+        name: 'Authorization',
+        bearerFormat: 'Bearer',
+        scheme: 'Bearer',
+        type: 'http',
+        in: 'Header',
+      },
+      'access-token',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

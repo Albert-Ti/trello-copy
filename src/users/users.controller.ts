@@ -12,8 +12,9 @@ import { AuthGuard } from 'src/guards/jwt-auth.guard';
 import { RequestWithUser } from 'src/types';
 import { UpdateUserDto } from './dto/update-dto';
 import { UsersService } from './users.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth('access-token')
 @ApiTags('Пользователи')
 @UseGuards(AuthGuard)
 @Controller('users')
@@ -29,10 +30,13 @@ export class UsersController {
     return await req.user;
   }
 
-  @ApiOperation({ summary: 'Найти пользователя по идентификатору' })
-  @Get(':id')
-  async getUserById(@Param('id') id: number) {
-    return await this.usersService.findOne({ where: { id } });
+  @ApiOperation({ summary: 'Найти пользователя по имени' })
+  @Get('find/:username')
+  async findUsername(@Param('username') username: string) {
+    return await this.usersService.findOne({
+      where: { username },
+      select: { password: false },
+    });
   }
 
   @ApiOperation({ summary: 'Изменить авторизованного пользователя' })
@@ -48,7 +52,7 @@ export class UsersController {
   async getUserColumnList(@Req() req: RequestWithUser) {
     return await this.columnsService.findMany({
       where: { owner: { id: req.user.id } },
-      relations: ['owner', 'cards', 'cards.comments'],
+      relations: ['owner', 'cards', 'cards.comments.replies'],
     });
   }
 
@@ -57,7 +61,7 @@ export class UsersController {
   })
   @Get('me/columns/:id')
   async getUserColumn(@Param('id') id: number) {
-    return await this.columnsService.getOne({
+    return await this.columnsService.findOne({
       where: { id },
       relations: ['owner', 'cards', 'cards.comments', 'cards.comments'],
     });

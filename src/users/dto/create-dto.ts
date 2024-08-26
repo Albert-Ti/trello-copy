@@ -8,11 +8,11 @@ import {
 } from 'class-validator';
 
 export class CreateUserDto {
-  @ApiProperty({ example: 'username', description: 'Имя' })
+  @ApiProperty({ example: 'swagger', description: 'Имя' })
   @IsString({ message: 'username должен быть строкой' })
   username: string;
 
-  @ApiProperty({ example: 'username@mail.com', description: 'Почта' })
+  @ApiProperty({ example: 'swagger@mail.com', description: 'Почта' })
   @IsEmail({}, { message: 'Некорректно введен email' })
   email: string;
 

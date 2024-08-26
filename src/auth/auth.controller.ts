@@ -15,7 +15,7 @@ export class AuthController {
     return await this.authService.signup(dto);
   }
 
-  @ApiOperation({ summary: 'Аутентификация пользователя' })
+  @ApiOperation({ summary: 'Авторизация пользователя' })
   @Post('signin')
   async signin(@Body() dto: SigninDto) {
     return await this.authService.signin(dto);

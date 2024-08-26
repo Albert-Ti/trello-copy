@@ -30,7 +30,6 @@ export class UserEntity {
   @Column({ unique: true })
   email: string;
 
-  @Exclude()
   @IsNotEmpty({ message: 'password не должен быть пустым' })
   @Column()
   password: string;
