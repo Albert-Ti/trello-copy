@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ColumnsService } from 'src/columns/columns.service';
-import { AuthGuard } from 'src/guards/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { RequestWithUser } from 'src/types';
 import { UpdateUserDto } from './dto/update-dto';
 import { UsersService } from './users.service';
@@ -16,7 +16,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Пользователи')
-@UseGuards(AuthGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(

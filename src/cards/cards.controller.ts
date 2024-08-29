@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/guards/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { RequestWithUser } from 'src/types';
 import { CardsService } from './cards.service';
 import { CreateCardsDto } from './dto/create-dto';
@@ -17,7 +17,7 @@ import { UpdateCardsDto } from './dto/update-dto';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Карточки')
-@UseGuards(AuthGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('columns/:columnId/cards')
 export class CardsController {
   constructor(private readonly cardsService: CardsService) {}
