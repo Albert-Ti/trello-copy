@@ -8,6 +8,7 @@ import {
 } from 'class-validator';
 import { ColumnEntity } from 'src/columns/entity/columns.entity';
 import { CommentEntity } from 'src/comments/entity/comments.entity';
+import { FileEntity } from 'src/files/entity/files.entity';
 import {
   Column,
   CreateDateColumn,
@@ -50,4 +51,7 @@ export class UserEntity {
 
   @OneToMany(() => CommentEntity, (comment) => comment.owner)
   comments: CommentEntity[];
+
+  @OneToMany(() => FileEntity, (file) => file.owner)
+  files: FileEntity[];
 }
