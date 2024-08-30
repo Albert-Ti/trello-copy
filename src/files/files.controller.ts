@@ -1,5 +1,7 @@
 import {
   Controller,
+  Delete,
+  Param,
   Post,
   Req,
   UploadedFile,
@@ -40,12 +42,18 @@ export class FilesController {
   @ApiOperation({ summary: 'Загрузка картинки' })
   @ApiConsumes('multipart/form-data')
   @ApiBody(swaggerUploadOptions)
-  @Post('uploads')
+  @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadImage(
+  async upload(
     @Req() req: RequestWithUser,
     @UploadedFile() file: Express.Multer.File,
   ) {
     return await this.filesService.saveFile(req.user, file);
+  }
+
+  @ApiOperation({ summary: 'Удаление файла' })
+  @Delete('delete/:id')
+  async remove(@Req() req: RequestWithUser, @Param('id') id: number) {
+    return await this.filesService.removeFile(req.user, id);
   }
 }

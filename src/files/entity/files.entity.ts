@@ -1,5 +1,12 @@
 import { UserEntity } from 'src/users/entity/users.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('files')
 export class FileEntity {
@@ -17,6 +24,12 @@ export class FileEntity {
 
   @Column({ type: 'bigint' })
   size: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @ManyToOne(() => UserEntity, (user) => user.files)
   owner: UserEntity;

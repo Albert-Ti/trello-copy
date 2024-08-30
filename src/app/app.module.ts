@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { MulterModule } from '@nestjs/platform-express';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { join } from 'path';
 import { CardsModule } from 'src/cards/cards.module';
 import { ColumnsModule } from 'src/columns/columns.module';
 import { CommentsModule } from 'src/comments/comments.module';
