@@ -3,7 +3,8 @@ import { AppModule } from './app/app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-async function bootstrap() {
+async function start() {
+  const PORT = process.env.PORT || 3000;
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe());
@@ -28,6 +29,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  await app.listen(3000);
+  await app.listen(PORT, () =>
+    console.log(`\x1b[32mСервер запущен на порту: \x1b[33m${PORT}\x1b[0m`),
+  );
 }
-bootstrap();
+start();

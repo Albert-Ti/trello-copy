@@ -10,6 +10,7 @@ import { join } from 'path';
 import { AuthorizedUser } from 'src/types';
 import { Repository } from 'typeorm';
 import { FileEntity } from './entity/files.entity';
+import * as sharp from 'sharp';
 
 @Injectable()
 export class FilesService {
@@ -29,19 +30,17 @@ export class FilesService {
       );
     }
 
-    const uniqueFilename = `${crypto.randomUUID()}-${file.originalname}`;
-
     try {
-      await writeFile(join(uploadFolder, uniqueFilename), file.buffer);
+      await writeFile(join(uploadFolder, file.originalname), file.buffer);
     } catch (writeError) {
       throw new InternalServerErrorException('Ошибка при записи файла');
     }
 
     return await this.filesRepository.save({
-      filename: uniqueFilename,
+      filename: file.originalname,
       mimetype: file.mimetype,
       size: file.size,
-      path: `/uploads/${uniqueFilename}`,
+      path: `/uploads/${file.originalname}`,
       owner: authorizedUser,
     });
   }
@@ -66,5 +65,20 @@ export class FilesService {
     } catch (error) {
       throw new InternalServerErrorException('Ошибка при удаление файла');
     }
+  }
+
+  async fileFiler(file: Express.Multer.File) {
+    let buffer = file.buffer;
+    let mimetype = file.mimetype;
+    let originalname = `${crypto.randomUUID()}-${file.originalname}`;
+
+    if (file.mimetype.includes('image') && file.mimetype !== 'image/svg+sml') {
+      buffer = await sharp(file.buffer).webp({ quality: 80 }).toBuffer();
+
+      mimetype = 'image/webp';
+      originalname = `${crypto.randomUUID()}-${file.originalname.replace(/\.[^\.]+$/, '.webp')}`;
+    }
+
+    return { ...file, buffer, mimetype, originalname };
   }
 }

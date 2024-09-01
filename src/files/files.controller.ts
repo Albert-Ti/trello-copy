@@ -32,6 +32,8 @@ const swaggerUploadOptions = {
   },
 };
 
+const limit10mb = { limits: { fileSize: 10 * 1024 * 1024 } };
+
 @ApiBearerAuth('access-token')
 @ApiTags('Загрузка файлов')
 @UseGuards(JwtAuthGuard)
@@ -39,16 +41,19 @@ const swaggerUploadOptions = {
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
-  @ApiOperation({ summary: 'Загрузка картинки' })
+  @ApiOperation({
+    summary: 'Загрузка файла с возможной конвертацией изображения в WebP',
+  })
   @ApiConsumes('multipart/form-data')
   @ApiBody(swaggerUploadOptions)
   @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file', limit10mb))
   async upload(
     @Req() req: RequestWithUser,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    return await this.filesService.saveFile(req.user, file);
+    const convertedFile = await this.filesService.fileFiler(file);
+    return await this.filesService.saveFile(req.user, convertedFile);
   }
 
   @ApiOperation({ summary: 'Удаление файла' })
