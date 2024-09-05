@@ -4,6 +4,7 @@ import * as bcrypt from 'bcryptjs';
 import { UsersService } from 'src/users/users.service';
 import { SigninDto } from './dto/signin-dto';
 import { SignupDto } from './dto/signup-dto';
+import { AppErrors } from 'src/errors';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +17,7 @@ export class AuthService {
     try {
       return await this.usersService.create(dto);
     } catch (error) {
-      throw new UnauthorizedException('Пользователь уже зарегистрирован');
+      throw new UnauthorizedException(AppErrors.USER.IS_ALREADY_EXISTS);
     }
   }
 
@@ -26,7 +27,9 @@ export class AuthService {
       password: dto.password,
     });
     if (!user) {
-      throw new UnauthorizedException('Неверный логин или пароль');
+      throw new UnauthorizedException(
+        AppErrors.USER.INCORRECT_LOGIN_OR_PASSWORD,
+      );
     }
     return {
       token: this.jwtService.sign(user, { secret: process.env.JWT_SECRET }),

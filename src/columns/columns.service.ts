@@ -5,6 +5,7 @@ import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { CreateColumnsDto } from './dto/create-dto';
 import { UpdateColumnsDto } from './dto/update-dto';
 import { ColumnEntity } from './entity/columns.entity';
+import { AppErrors } from 'src/errors';
 
 @Injectable()
 export class ColumnsService {
@@ -46,7 +47,7 @@ export class ColumnsService {
     });
 
     if (owner.id !== userId) {
-      throw new ForbiddenException('У вас нет доступа');
+      throw new ForbiddenException(AppErrors.USER.FORBIDDEN);
     }
   }
 }

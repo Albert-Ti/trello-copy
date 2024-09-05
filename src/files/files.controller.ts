@@ -16,23 +16,10 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { FilesService } from './files.service';
+import { limit10mb, swaggerUploadOptions } from 'src/constants';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { RequestWithUser } from 'src/types';
-
-const swaggerUploadOptions = {
-  schema: {
-    type: 'object',
-    properties: {
-      file: {
-        type: 'string',
-        format: 'binary',
-      },
-    },
-  },
-};
-
-const limit10mb = { limits: { fileSize: 10 * 1024 * 1024 } };
+import { FilesService } from './files.service';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Загрузка файлов')
@@ -52,7 +39,7 @@ export class FilesController {
     @Req() req: RequestWithUser,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const convertedFile = await this.filesService.fileFiler(file);
+    const convertedFile = await this.filesService.fileFilter(file);
     return await this.filesService.saveFile(req.user, convertedFile);
   }
 

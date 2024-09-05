@@ -1,6 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ColumnsService } from 'src/columns/columns.service';
+import { AppErrors } from 'src/errors';
 import { AuthorizedUser } from 'src/types';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { CreateCardsDto } from './dto/create-dto';
@@ -20,7 +25,7 @@ export class CardsService {
       where: { id: columnId },
     });
     if (!findColumn) {
-      throw new NotFoundException('Сначала нужно создать колонку');
+      throw new NotFoundException(AppErrors.CARD.CREATING_A_CARD);
     }
     return await this.cardsRepository.save({ ...dto, column: findColumn });
   }
@@ -54,7 +59,7 @@ export class CardsService {
     });
 
     if (column.owner.id !== userId) {
-      throw new NotFoundException('У вас нет доступа');
+      throw new ForbiddenException(AppErrors.USER.FORBIDDEN);
     }
   }
 }

@@ -6,6 +6,7 @@ import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { CreateCommentsDto } from './dto/create-dto';
 import { UpdateCommentsDto } from './dto/update-dto';
 import { CommentEntity } from './entity/comments.entity';
+import { AppErrors } from 'src/errors';
 
 @Injectable()
 export class CommentsService {
@@ -62,7 +63,7 @@ export class CommentsService {
     });
 
     if (owner.id !== userId) {
-      throw new ForbiddenException('У вас нет доступа');
+      throw new ForbiddenException(AppErrors.USER.FORBIDDEN);
     }
   }
 }

@@ -11,6 +11,7 @@ import { AuthorizedUser } from 'src/types';
 import { Repository } from 'typeorm';
 import { FileEntity } from './entity/files.entity';
 import * as sharp from 'sharp';
+import { AppErrors } from 'src/errors';
 
 @Injectable()
 export class FilesService {
@@ -26,14 +27,14 @@ export class FilesService {
       await mkdir(uploadFolder, { recursive: true });
     } catch (mkdirError) {
       throw new InternalServerErrorException(
-        'Ошибка при создании директории для файлов',
+        AppErrors.FILE.CREATING_A_DIRECTORY,
       );
     }
 
     try {
       await writeFile(join(uploadFolder, file.originalname), file.buffer);
     } catch (writeError) {
-      throw new InternalServerErrorException('Ошибка при записи файла');
+      throw new InternalServerErrorException(AppErrors.FILE.WRITE_FILE);
     }
 
     return await this.filesRepository.save({
@@ -52,28 +53,28 @@ export class FilesService {
     });
 
     if (!findFile) {
-      throw new NotFoundException('Файл не найден');
+      throw new NotFoundException(AppErrors.FILE.FILE_NOT_FOUND);
     }
 
     if (authorizedUser.id !== findFile.owner.id) {
-      throw new ForbiddenException('У вас нет доступа');
+      throw new ForbiddenException(AppErrors.USER.FORBIDDEN);
     }
 
     try {
       await rm(join(process.cwd(), findFile.path));
       return await this.filesRepository.delete(id);
     } catch (error) {
-      throw new InternalServerErrorException('Ошибка при удаление файла');
+      throw new InternalServerErrorException(AppErrors.FILE.DELETING_A_FILE);
     }
   }
 
-  async fileFiler(file: Express.Multer.File) {
+  async fileFilter(file: Express.Multer.File) {
     let buffer = file.buffer;
     let mimetype = file.mimetype;
     let originalname = `${crypto.randomUUID()}-${file.originalname}`;
 
     if (file.mimetype.includes('image') && file.mimetype !== 'image/svg+sml') {
-      buffer = await sharp(file.buffer).webp({ quality: 80 }).toBuffer();
+      buffer = await sharp(file.buffer).webp().toBuffer();
 
       mimetype = 'image/webp';
       originalname = `${crypto.randomUUID()}-${file.originalname.replace(/\.[^\.]+$/, '.webp')}`;
